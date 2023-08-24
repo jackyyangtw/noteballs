@@ -32,6 +32,15 @@
                 :class="{ 'is-active': showMobileNav }"
                 ref="navbarMenuRef"
             >
+                <div class="navbar-start">
+                    <button
+                        class="button is-small is-info mt-3 ml-3"
+                        @click="logoutUser"
+                        v-if="user && user.uid"
+                    >
+                        logout {{ user.email }}
+                    </button>
+                </div>
                 <div class="navbar-end">
                     <RouterLink
                         class="navbar-item"
@@ -59,19 +68,31 @@
 <script setup>
 import { ref } from "vue";
 import { onClickOutside } from "@vueuse/core";
+import { useAuthStore } from "../../stores/auth";
+import { storeToRefs } from "pinia";
 const showMobileNav = ref(false);
 const navbarBurgerRef = ref(null);
 
+// close mobile nav when clicking outside
 const navbarMenuRef = ref(null);
 onClickOutside(
     navbarMenuRef,
-    (e) => {
+    () => {
         showMobileNav.value = false;
     },
     {
         ignore: [navbarBurgerRef],
     }
 );
+
+// logout
+const authStore = useAuthStore();
+const { user } = storeToRefs(authStore);
+const { logoutUser: logout } = authStore;
+const logoutUser = () => {
+    logout();
+    showMobileNav.value = false;
+};
 </script>
 
 

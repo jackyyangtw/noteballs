@@ -11,12 +11,27 @@
                 </button>
             </template>
         </Edit>
-        <Note
-            v-for="note in notes"
-            :key="note.id"
-            :note="note"
-            @deleteNote="deleteNote"
-        />
+        <progress
+            v-if="!notesLoaded"
+            class="progress is-large is-success"
+            max="100"
+        >
+            60%
+        </progress>
+        <template v-else>
+            <Note
+                v-for="note in notes"
+                :key="note.id"
+                :note="note"
+                @deleteNote="deleteNote"
+            />
+        </template>
+        <div
+            class="is-size-4 has-text-centered"
+            v-if="notes.length === 0 && notesLoaded"
+        >
+            No notes here yet...
+        </div>
     </div>
 </template>
 
@@ -24,12 +39,12 @@
 import { ref } from "vue";
 import { useNotesStore } from "@/stores/notes";
 import { storeToRefs } from "pinia";
+import { useWatchCharacters } from "@/use/useWatchCharacters";
 import Note from "@/components/Notes/Note.vue";
 import Edit from "@/components/Notes/Edit.vue";
-import { useWatchCharacters } from "@/use/useWatchCharacters";
 
 const notesStore = useNotesStore();
-const { notes } = storeToRefs(notesStore);
+const { notes, notesLoaded } = storeToRefs(notesStore);
 const { addNote: addNoteAction, deleteNote: deleteNoteAction } = notesStore;
 const newNote = ref("");
 const editRef = ref(null);

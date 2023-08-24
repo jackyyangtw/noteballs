@@ -1,13 +1,12 @@
 <script setup>
 import NavBar from "./components/Layout/NavBar.vue";
-import { useNotesStore } from "./stores/notes";
-const { getNotes } = useNotesStore();
-getNotes();
+import { useAuthStore } from "./stores/auth";
+const authStore = useAuthStore();
+const { initAuth } = authStore;
+initAuth();
 </script>
 
 <template>
-    <!-- <RouterLink to="/" class="button">Notes</RouterLink>
-    <RouterLink to="/stats" class="button">Stats</RouterLink> -->
     <NavBar />
     <div class="container is-max-desktop px-2 py-4">
         <RouterView />
